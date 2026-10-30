@@ -1,0 +1,12 @@
+{
+  "name": "mpc-learning",
+  "version": "0.1.0",
+  "builtin-baseline": "469a0504e4a6ebf6173d1c0f51a7fa34c382fd43",
+  "dependencies": [],
+  "features": {
+    "simulator": {
+      "description": "Modern Udacity simulator WebSocket bridge",
+      "dependencies": ["boost-beast", "nlohmann-json"]
+    }
+  }
+}

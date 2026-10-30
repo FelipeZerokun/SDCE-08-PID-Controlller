@@ -1,0 +1,45 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {"major": 3, "minor": 22, "patch": 0},
+  "configurePresets": [
+    {
+      "name": "offline-base", "hidden": true,
+      "cacheVariables": {"BUILD_SIMULATOR": false, "BUILD_TESTING": true}
+    },
+    {
+      "name": "ubuntu-offline", "inherits": "offline-base", "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/ubuntu-offline",
+      "condition": {"type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux"},
+      "cacheVariables": {"CMAKE_BUILD_TYPE": "Release"}
+    },
+    {
+      "name": "windows-offline", "inherits": "offline-base",
+      "binaryDir": "${sourceDir}/build/windows-offline",
+      "condition": {"type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows"}
+    },
+    {
+      "name": "ubuntu-simulator", "inherits": "ubuntu-offline",
+      "binaryDir": "${sourceDir}/build/ubuntu-simulator",
+      "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+      "cacheVariables": {"BUILD_SIMULATOR": true}
+    },
+    {
+      "name": "windows-simulator", "inherits": "windows-offline",
+      "binaryDir": "${sourceDir}/build/windows-simulator",
+      "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+      "cacheVariables": {"BUILD_SIMULATOR": true}
+    }
+  ],
+  "buildPresets": [
+    {"name": "ubuntu-offline", "configurePreset": "ubuntu-offline", "jobs": 2},
+    {"name": "ubuntu-simulator", "configurePreset": "ubuntu-simulator", "jobs": 2},
+    {"name": "windows-offline", "configurePreset": "windows-offline", "configuration": "Release"},
+    {"name": "windows-simulator", "configurePreset": "windows-simulator", "configuration": "Release"}
+  ],
+  "testPresets": [
+    {"name": "ubuntu-offline", "configurePreset": "ubuntu-offline", "output": {"outputOnFailure": true}, "execution": {"noTestsAction": "error"}},
+    {"name": "ubuntu-simulator", "configurePreset": "ubuntu-simulator", "output": {"outputOnFailure": true}, "execution": {"noTestsAction": "error"}},
+    {"name": "windows-offline", "configurePreset": "windows-offline", "configuration": "Release", "output": {"outputOnFailure": true}, "execution": {"noTestsAction": "error"}},
+    {"name": "windows-simulator", "configurePreset": "windows-simulator", "configuration": "Release", "output": {"outputOnFailure": true}, "execution": {"noTestsAction": "error"}}
+  ]
+}

@@ -1,0 +1,12 @@
+.vscode
+build
+tags
+.editorconfig
+/outputs/
+/[Ll]egacy/
+/[Ss]imulator/
+/[Ss]imulators/
+/build-*/
+/vcpkg_installed/
+/CMakeUserPresets.json
+__pycache__/
