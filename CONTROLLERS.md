@@ -1,5 +1,8 @@
 # PID, LQR, and MPC: run and understand the comparison
 
+MPC has been revised after the first Ubuntu failure. See [MPC_RETEST.md](MPC_RETEST.md).
+The initial-result table below describes revision 1, not the current MPC.
+
 For Ubuntu 22.04.5 commands, see [PLATFORM_SETUP.md](PLATFORM_SETUP.md).
 The examples below use Windows paths; all controllers also have Ubuntu build presets.
 
@@ -118,14 +121,14 @@ Our MPC predicts 12 steps of 0.1 seconds. It penalizes lateral/heading error, st
 magnitude, and changes in steering. It constrains normalized steering to [-1,1], solves
 an approximate quadratic optimization by coordinate minimization, applies the first
 command, and repeats with fresh measurements. See `src/MPC.cpp` and MPC_GUIDE.md.
-The horizon is finite, and its terminal penalty is a chosen weight, not an LQR terminal
-Riccati matrix. The solver's sweep budget is not a convergence guarantee.
+Revision 1 used a chosen diagonal terminal penalty rather than an LQR terminal
+Riccati matrix; revision 2 uses a continuous LQR terminal value and hard steering-rate bounds. The solver's sweep budget is not a convergence guarantee.
 
 MPC and LQR are related: with compatible linear dynamics, quadratic costs, no active
 constraints, and suitable terminal treatment, MPC can reproduce LQR feedback. Our
 implementations use different costs and horizons, so this comparison is not a test of
 that equivalence. MPC's extra flexibility pays off only when its model and objective
-capture what matters. Here it has NO preview or actuator-delay compensation.
+capture what matters. It still has no preview; revision 2 adds an approximate response allowance, not an identified delay model.
 
 ## Initial results: an experiment, not a universal ranking
 

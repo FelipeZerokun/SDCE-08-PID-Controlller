@@ -8,6 +8,7 @@ class MPC {
   static constexpr double step = 0.1;
   static constexpr double wheelbase = 2.67;
   static constexpr double max_angle = 0.436332313;
+  static constexpr double steering_rate = 1.5; // normalized units / second
   double Update(double cte, double speed_mps, double elapsed_seconds);
   void Reset();
  private:
@@ -15,5 +16,8 @@ class MPC {
   std::array<double, horizon> plan_{};
   StateEstimate estimate_;
   double previous_command_ = 0.0;
+
+  double integral_bias_ = 0.0;
+  double first_step_ = step;
 };
 #endif

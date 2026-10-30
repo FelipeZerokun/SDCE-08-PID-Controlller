@@ -7,6 +7,7 @@ logging, with a Boost.Beast simulator connection and a synthetic vehicle benchma
 - [Controller comparison and experiments](CONTROLLERS.md)
 - [Windows and Ubuntu 22.04.5 setup](PLATFORM_SETUP.md)
 - [MPC model, objective, and implementation](MPC_GUIDE.md)
+- [Revised MPC and Ubuntu retest](MPC_RETEST.md)
 
 ## Quick offline build
 
@@ -40,9 +41,7 @@ handling, tests, and analysis scripts support repeatable comparisons.
 The new PID uses time-aware integration/derivatives and is not an exact replay of
 the original tuned PID solution.
 
-Windows builds and numerical/protocol tests have been verified. Ubuntu build
-presets are provided; an Ubuntu build and real Unity simulator laps remain to be
-verified. Synthetic benchmark results are not real simulator lap results.
+Windows builds and numerical/protocol tests have been verified. The user also verified the Ubuntu build/tests and a PID lap. The first MPC failed its lap; revision 2 needs a new Ubuntu driving test. Synthetic benchmark results are not real simulator lap results.
 
 ## Original project and local files
 

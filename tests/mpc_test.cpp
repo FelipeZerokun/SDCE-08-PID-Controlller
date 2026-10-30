@@ -18,6 +18,18 @@ int main() {
     try { a.Update(std::numeric_limits<double>::quiet_NaN(), 10, 0.02); }
     catch (const std::invalid_argument&) { rejected = true; }
     Check(rejected, "Reject invalid input");
+    MPC limited;
+    double previous_command=0;
+    for(int i=0;i<200;++i) {
+      const double dt = i%3==0 ? 0.18 : (i%3==1 ? 0.02 : 0.08);
+      const double u=limited.Update(i%20<10 ? 4.0 : -4.0,11.2,dt);
+      Check(std::abs(u-previous_command)<=MPC::steering_rate*std::min(dt,MPC::step)+1e-9,
+            "Hard steering-rate limit under abrupt errors and irregular timing");
+      Check(std::abs(u)<=1.0,"Amplitude bound under rate constraint");
+      previous_command=u;
+    }
+    limited.Reset();
+    Check(std::abs(limited.Update(0,11.2,0.02))<1e-8,"Reset clears integral trim and plan");
     // Independent nonlinear bicycle plant, slightly different wheelbase, curved road.
     // This is a numerical check, not evidence of a successful Unity simulator lap.
     for (double speed : {5.0, 11.0, 18.0}) {
