@@ -5,6 +5,7 @@ Compare three lateral controllers using the same telemetry, speed control, and
 logging, with a Boost.Beast simulator connection and a synthetic vehicle benchmark.
 
 - [Controller comparison and experiments](CONTROLLERS.md)
+- [Plot simulator logs and speed comparisons](VISUALIZATION.md)
 - [Windows and Ubuntu 22.04.5 setup](PLATFORM_SETUP.md)
 - [MPC model, objective, and implementation](MPC_GUIDE.md)
 - [Revised MPC and Ubuntu retest](MPC_RETEST.md)
