@@ -16,5 +16,8 @@ class Controller {
   MPC mpc_;
   StateEstimate estimate_;
   double integral_ = 0;
+  double previous_command_ = 0;
+  double response_command_ = 0;
+  double sample_step_ = 0.1;
 };
 #endif

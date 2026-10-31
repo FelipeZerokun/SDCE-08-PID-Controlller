@@ -1,5 +1,9 @@
 # PID, LQR, and MPC: run and understand the comparison
 
+PID and LQR have also been revised: [PID_LQR_RETEST.md](PID_LQR_RETEST.md) describes
+the current predictive PID wrapper and discrete-time LQR. The PID/LQR derivations
+and gains below describe revision 1; keep that distinction when comparing logs.
+
 MPC has been revised after the first Ubuntu failure. See [MPC_RETEST.md](MPC_RETEST.md).
 The initial-result table below describes revision 1, not the current MPC.
 

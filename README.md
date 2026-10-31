@@ -9,6 +9,7 @@ logging, with a Boost.Beast simulator connection and a synthetic vehicle benchma
 - [Windows and Ubuntu 22.04.5 setup](PLATFORM_SETUP.md)
 - [MPC model, objective, and implementation](MPC_GUIDE.md)
 - [Revised MPC and Ubuntu retest](MPC_RETEST.md)
+- [Revised PID/LQR and timing-aware retest](PID_LQR_RETEST.md)
 
 ## Quick offline build
 
