@@ -5,8 +5,9 @@ Boost.Beast simulator server on both platforms. Use Windows for development/offl
 experiments and Ubuntu for the Linux Unity simulator. There is no uWebSockets dependency.
 
 Validation: Windows Release builds, controller tests, and loopback protocol tests pass.
-The new Windows offline preset also passes. Ubuntu presets are provided, but an Ubuntu
-build and Unity lap have NOT yet been executed in this session.
+The Windows offline preset also passes. The user verified builds/tests and Unity
+driving on a separate Ubuntu 22.04.5 laptop. These are user-run Ubuntu checks, not
+local Windows execution of Unity. See [RESULTS.md](RESULTS.md) for lap outcomes.
 
 ## Ubuntu: prerequisites
 

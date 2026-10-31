@@ -4,6 +4,7 @@ A modern extension of the original Udacity Self-Driving Car Engineer PID project
 Compare three lateral controllers using the same telemetry, speed control, and
 logging, with a Boost.Beast simulator connection and a synthetic vehicle benchmark.
 
+- [Simulator results and conclusions](RESULTS.md)
 - [Controller comparison and experiments](CONTROLLERS.md)
 - [Plot simulator logs and speed comparisons](VISUALIZATION.md)
 - [Windows and Ubuntu 22.04.5 setup](PLATFORM_SETUP.md)
@@ -43,7 +44,7 @@ handling, tests, and analysis scripts support repeatable comparisons.
 The new PID uses time-aware integration/derivatives and is not an exact replay of
 the original tuned PID solution.
 
-Windows builds and numerical/protocol tests have been verified. The user also verified the Ubuntu build/tests and a PID lap. The first MPC failed its lap; revision 2 needs a new Ubuntu driving test. Synthetic benchmark results are not real simulator lap results.
+Windows builds and five numerical/protocol test suites passed before the latest controller release. The user verified Ubuntu builds/tests and simulator laps. PID v2 and MPC v2 completed the higher-speed experiments; LQR v2 left the track in its 50 mph-target run, recovered, and finished. Those runs reached only about 34 mph. See [RESULTS.md](RESULTS.md) for measured results, timing limitations, and reported outcomes. Synthetic benchmarks are separate from simulator validation.
 
 ## Original project and local files
 

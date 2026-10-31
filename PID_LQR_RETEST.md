@@ -4,6 +4,10 @@ MPC v2, the shared CTE derivative estimator, throttle controller, and simulator
 protocol are unchanged. This revision modifies only the PID/LQR control paths and
 adds an independently integrated nonlinear stress test.
 
+## Simulator results now available
+
+The 30 and 50 mph-target runs are documented in [RESULTS.md](RESULTS.md). PID v2 completed both with no departure reported. LQR v2 completed both, but left the track and recovered in the 50 mph-target run. Actual speeds peaked around 34 mph in the latter tests. The commands below remain a repeat-test procedure.
+
 ## Why a slow laptop matters
 
 We measure elapsed time with the server's wall clock. If Unity stalls, messages can
@@ -76,8 +80,8 @@ PREVIOUS interval that produced the current measurement, not the next planned in
 The revised controllers pass all fixed-pattern cases, plus cases using the recorded
 30 mph timing sequences. Acceptance thresholds: post-startup RMS CTE below 0.9 m,
 maximum error below 2 m, and less than 5% steering saturation. These are development
-checks, not road-edge or lap-completion guarantees. Tuning used these tests, so another
-Unity run is still needed; no revised PID/LQR simulator result has been observed yet.
+checks, not road-edge or lap-completion guarantees. Tuning used these tests. Subsequent
+Ubuntu simulator results are recorded separately in [RESULTS.md](RESULTS.md).
 
 An optional clock-scale argument explores simulation-time mismatch. With a 0.5 scale
 and the PID 30 mph intervals, the test remains bounded but six cases exceed the 0.9 m
@@ -88,7 +92,7 @@ scenarios pass or assume lag compensation is a substitute for consistent perform
 Additional tests cover rate limits, resets, symmetry, invalid inputs, nominal discrete
 LQR closed-loop stability, and the small-step limit toward continuous-time gains.
 The two-state solver is run each LQR update; its computation cost differs from the old
-constant-gain LQR and should be measured in new logs.
+constant-gain LQR. Measured computation times are included in [RESULTS.md](RESULTS.md).
 
 ## Ubuntu commands
 

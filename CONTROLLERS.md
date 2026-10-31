@@ -1,5 +1,7 @@
 # PID, LQR, and MPC: run and understand the comparison
 
+See [RESULTS.md](RESULTS.md) for current Ubuntu simulator results and conclusions.
+
 PID and LQR have also been revised: [PID_LQR_RETEST.md](PID_LQR_RETEST.md) describes
 the current predictive PID wrapper and discrete-time LQR. The PID/LQR derivations
 and gains below describe revision 1; keep that distinction when comparing logs.

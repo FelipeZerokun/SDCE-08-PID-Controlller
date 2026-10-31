@@ -2,7 +2,8 @@
 
 See [PLATFORM_SETUP.md](PLATFORM_SETUP.md) for Windows/Ubuntu builds,
 [CONTROLLERS.md](CONTROLLERS.md) for the controller comparison, and
-[MPC_RETEST.md](MPC_RETEST.md) for revision 2 and the next Ubuntu experiment.
+[MPC_RETEST.md](MPC_RETEST.md) for revision 2 and repeat-test commands.
+See [RESULTS.md](RESULTS.md) for observed Ubuntu simulator results.
 
 ## Read the code in this order
 

@@ -4,6 +4,13 @@ This revision responds to the first Ubuntu log: steering oscillated between -1 a
 with 28.8% of recorded time at full steering and a failed lap. PID and LQR code,
 shared state estimation, speed controller, and the telemetry protocol are unchanged.
 
+## Subsequent simulator validation
+
+The user reported completed MPC v2 laps at targets of 15, 25, 30, and 50 mph. The
+50 mph-target recording peaked around 34 mph. See [RESULTS.md](RESULTS.md) for the
+measured comparison and limitations. This guide describes the MPC revision at its
+introduction; PID and LQR were revised separately afterward.
+
 ## What changed
 
 - Steering magnitude costs much more (weight 25 instead of 0.5); steering changes
@@ -47,9 +54,10 @@ use only sample intervals from the CSV; the simulated car responds to the NEW co
 They do not replay the old CTE as though it were a new closed-loop result.
 
 The tuning used these stress scenarios, so their results are development evidence,
-not independent simulator validation. No revised Unity lap has been observed yet.
-This revision trades some ideal-model tracking speed for smoother, more tolerant
-behavior. It is not claimed to outperform LQR. Start at 15 mph before testing 25 mph.
+not independent simulator validation. Subsequent Unity experiments are documented
+in [RESULTS.md](RESULTS.md). This revision trades some ideal-model tracking speed
+for smoother, more tolerant behavior. The measured comparison is specific to these
+implementations and runs, not a general claim that MPC outperforms LQR.
 
 ## On Ubuntu
 
