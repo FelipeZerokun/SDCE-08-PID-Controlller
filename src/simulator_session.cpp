@@ -34,6 +34,12 @@ SimulatorSession::~SimulatorSession() {
     metrics_.Write(std::cout); std::cout << std::endl;
   }
 }
+void SimulatorSession::WriteLogHeader(std::ostream& out) {
+  out << "connection,segment,controller,time_s,dt_s,cte_m,speed_mph,steering,throttle,compute_us"
+         ",diagnostic_schema,wall_dt_s,target_mph,throttle_raw,pause_reset";
+  ControllerDiagnostics::Header(out);
+  out << '\n';
+}
 void SimulatorSession::Reset() {
   controller_.Reset(); last_.reset(); metrics_={}; elapsed_=0; ++segment_;
 }
@@ -68,7 +74,11 @@ std::optional<std::string> SimulatorSession::HandleMessage(const std::string& me
     metrics_.Add(cte,steering,sample_dt,compute_us);
     if (options_.log) {
       *options_.log << options_.connection << ',' << segment_ << ',' << options_.controller << ','
-          << elapsed_ << ',' << sample_dt << ',' << cte << ',' << mph << ',' << steering << ',' << throttle << ',' << compute_us << '\n';
+          << elapsed_ << ',' << sample_dt << ',' << cte << ',' << mph << ',' << steering << ',' << throttle << ',' << compute_us
+          << ",1," << dt << ',' << options_.target_mph << ','
+          << 0.08*(options_.target_mph-mph) << ',' << (dt>0.5 ? 1 : 0);
+      controller_.Diagnostics().Write(*options_.log);
+      *options_.log << '\n';
       options_.log->flush();
       if (!*options_.log) throw std::runtime_error("Telemetry log write failed");
     }

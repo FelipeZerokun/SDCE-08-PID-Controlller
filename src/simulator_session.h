@@ -16,6 +16,7 @@ class SimulatorSession {
  public:
   explicit SimulatorSession(SessionOptions options = {});
   ~SimulatorSession();
+  static void WriteLogHeader(std::ostream& out);
   std::optional<std::string> HandleMessage(const std::string& message);
  private:
   void Reset();

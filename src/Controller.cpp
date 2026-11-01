@@ -9,10 +9,15 @@ Controller::Controller(std::string name) : name_(std::move(name)) {
     throw std::invalid_argument("Controller must be pid, mpc or lqr");
 }
 void Controller::Reset() {
+  diagnostics_ = {};
   mpc_.Reset(); estimate_ = {}; integral_ = previous_command_ = response_command_ = 0; sample_step_=0.1;
 }
 double Controller::Update(double cte, double speed, double dt) {
-  if (name_ == "mpc") return mpc_.Update(cte, speed, dt);
+  if (name_ == "mpc") {
+    const double command = mpc_.Update(cte, speed, dt);
+    diagnostics_ = mpc_.Diagnostics();
+    return command;
+  }
   if (!std::isfinite(cte)||!std::isfinite(speed)||!std::isfinite(dt)||speed<0||dt<=0)
     throw std::invalid_argument("Expected finite CTE, nonnegative speed and positive dt");
   if (dt > 0.5) Reset();
@@ -21,6 +26,11 @@ double Controller::Update(double cte, double speed, double dt) {
   const double limit=1.5*std::min(dt,0.1);
   const double lower=std::max(-1.0,previous_command_-limit);
   const double upper=std::min(1.0,previous_command_+limit);
+  diagnostics_ = {};
+  diagnostics_.cte_rate=estimate_.rate; diagnostics_.heading=heading;
+  diagnostics_.previous_command=previous_command_;
+  diagnostics_.response_command=response_command_;
+  diagnostics_.lower=lower; diagnostics_.upper=upper;
   double command;
   if (name_ == "pid") {
     // Reduce derivative gain above 11.2 m/s; do not amplify it at low speed.
@@ -38,6 +48,11 @@ double Controller::Update(double cte, double speed, double dt) {
     // Conditional integration considers both actuator amplitude AND rate limiting.
     if(std::abs(raw-limited)<1e-10 || (raw-limited)*cte>0) integral_=candidate;
     command=std::clamp(-kp*predicted_error-ki*integral_-kd*predicted_rate,lower,upper);
+    diagnostics_.predicted_error=predicted_error;
+    diagnostics_.predicted_rate=predicted_rate;
+    diagnostics_.raw_command=-kp*predicted_error-ki*integral_-kd*predicted_rate;
+    diagnostics_.integral=integral_;
+    diagnostics_.kp=kp; diagnostics_.ki=ki; diagnostics_.kd=kd;
   } else {
     // Smooth sample-time scheduling so packet jitter does not abruptly retune K.
     sample_step_ += 0.15*(std::clamp(dt,0.05,0.2)-sample_step_);
@@ -49,6 +64,11 @@ double Controller::Update(double cte, double speed, double dt) {
     const double predicted_error=cte+speed*heading*response+0.5*speed*yaw*response*response;
     const double predicted_heading=heading+yaw*response;
     command=std::clamp(-gains.error*predicted_error-gains.heading*predicted_heading,lower,upper);
+    diagnostics_.predicted_error=predicted_error;
+    diagnostics_.predicted_heading=predicted_heading;
+    diagnostics_.raw_command=-gains.error*predicted_error-gains.heading*predicted_heading;
+    diagnostics_.lqr_error_gain=gains.error; diagnostics_.lqr_heading_gain=gains.heading;
+    diagnostics_.model_step=sample_step_;
   }
   previous_command_=command;
   return command;

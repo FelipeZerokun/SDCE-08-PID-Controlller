@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
       if (!parent.empty()) std::filesystem::create_directories(parent);
       log.open(log_path);
       if (!log) throw std::runtime_error("Cannot open log");
-      log << "connection,segment,controller,time_s,dt_s,cte_m,speed_mph,steering,throttle,compute_us\n";
+      SimulatorSession::WriteLogHeader(log);
       options.log=&log;
     }
     std::cout << "Controller: " << options.controller << ", target: " << options.target_mph << " mph\n";

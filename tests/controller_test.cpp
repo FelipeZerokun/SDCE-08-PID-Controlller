@@ -51,6 +51,25 @@ int main() {
       rate_limited.Reset();
       Check(std::abs(rate_limited.Update(0,13.4,0.02))<1e-12,"Reset clears response estimate");
     }
+    for (const std::string name : {"pid","lqr","mpc"}) {
+      Controller diagnostic(name);
+      for (double dt : {0.02,0.08,0.18,0.7,0.03}) {
+        const double u=diagnostic.Update(4,13.4,dt);
+        const auto& d=diagnostic.Diagnostics();
+        Check(std::isfinite(d.cte_rate)&&std::isfinite(d.heading),"Finite state diagnostics");
+        Check(u>=d.lower-1e-9&&u<=d.upper+1e-9,"Logged bounds contain command");
+        if(name!="mpc") {
+          Check(std::abs(u-std::clamp(d.raw_command,d.lower,d.upper))<1e-12,"Raw command explains output");
+          Check(std::isnan(d.mpc_sweeps),"Inapplicable MPC field unavailable");
+        } else {
+          Check(d.mpc_sweeps>=1&&d.mpc_sweeps<=80,"MPC sweep count");
+          Check(std::isnan(d.raw_command),"MPC has no unconstrained raw command");
+        }
+        if(dt>0.5) Check(d.previous_command==0,"Pause clears diagnostic command history");
+      }
+      diagnostic.Reset();
+      Check(std::isnan(diagnostic.Diagnostics().heading),"Reset invalidates snapshot");
+    }
     Controller pid("pid");
     for (int i=0;i<500;++i) pid.Update(100,0,0.02);
     Check(std::abs(pid.Update(0,0,1))<1e-12,"PID pause clears windup and derivative");

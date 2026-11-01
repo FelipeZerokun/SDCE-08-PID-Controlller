@@ -2,6 +2,7 @@
 #define MPC_H
 #include <array>
 #include "StateEstimate.h"
+#include "Diagnostics.h"
 class MPC {
  public:
   static constexpr int horizon = 12;
@@ -11,7 +12,9 @@ class MPC {
   static constexpr double steering_rate = 1.5; // normalized units / second
   double Update(double cte, double speed_mps, double elapsed_seconds);
   void Reset();
+  const ControllerDiagnostics& Diagnostics() const { return diagnostics_; }
  private:
+  ControllerDiagnostics diagnostics_;
   double Cost(const std::array<double, horizon>& u, double e, double heading, double speed) const;
   std::array<double, horizon> plan_{};
   StateEstimate estimate_;

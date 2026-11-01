@@ -6,6 +6,7 @@ namespace {
 double Clamp(double x, double lo, double hi) { return std::max(lo, std::min(x, hi)); }
 }
 void MPC::Reset() {
+  diagnostics_ = {};
   plan_.fill(0.0);
   estimate_ = {};
   previous_command_ = integral_bias_ = 0.0;
@@ -49,6 +50,16 @@ double MPC::Update(double cte, double speed, double dt) {
   cte += integral_bias_;
   first_step_ = std::min(dt, step); // do not allow a large jump after a late packet
 
+  diagnostics_ = {};
+  diagnostics_.cte_rate=estimate_.rate; diagnostics_.heading=heading;
+  diagnostics_.previous_command=previous_command_;
+  diagnostics_.lower=std::max(-1.0,previous_command_-steering_rate*first_step_);
+  diagnostics_.upper=std::min(1.0,previous_command_+steering_rate*first_step_);
+  diagnostics_.mpc_bias=integral_bias_; diagnostics_.model_step=step;
+  const double held_yaw=speed/wheelbase*max_angle*previous_command_;
+  diagnostics_.predicted_error=cte+speed*heading*0.30+0.5*speed*held_yaw*0.30*0.30;
+  diagnostics_.predicted_heading=heading+held_yaw*0.30;
+
   // Resample the previous plan at elapsed time; hold its tail for a warm start.
   const auto old = plan_;
   for (int k = 0; k < horizon; ++k) {
@@ -86,6 +97,8 @@ double MPC::Update(double cte, double speed, double dt) {
       plan_[k] = Clamp(original - (plus - minus) / (2.0 * curvature), lower, upper);
       largest_change = std::max(largest_change, std::abs(plan_[k] - original));
     }
+    diagnostics_.mpc_sweeps=sweep+1;
+    diagnostics_.mpc_last_change=largest_change;
     if (largest_change < 1e-5) break;
   }
   previous_command_ = plan_[0]; // Apply only the first action, then measure again.

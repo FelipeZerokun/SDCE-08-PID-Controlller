@@ -5,6 +5,7 @@ Compare three lateral controllers using the same telemetry, speed control, and
 logging, with a Boost.Beast simulator connection and a synthetic vehicle benchmark.
 
 - [Simulator results and conclusions](RESULTS.md)
+- [Diagnostic logging and investigation](DIAGNOSTICS.md)
 - [Controller comparison and experiments](CONTROLLERS.md)
 - [Plot simulator logs and speed comparisons](VISUALIZATION.md)
 - [Windows and Ubuntu 22.04.5 setup](PLATFORM_SETUP.md)
